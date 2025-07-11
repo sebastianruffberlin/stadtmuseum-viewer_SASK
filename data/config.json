@@ -1,212 +1,77 @@
 {
   "project": {
-    "name": "Kunsthaus",
+    "name": "Stadtmuseum Viewer",
     "quality": 1
   },
   "loader": {
     "info": "data/info.md",
     "items": "data/data.csv",
+    "timeline": "data/timeline.csv",
     "layouts": [
       {
-        "title": "Zeit",
+        "title": "Zeitleiste",
         "type": "group",
         "groupKey": "year"
       },
       {
-        "title": "Kaufpreis",
-        "type": "group",
-        "groupKey": "year",
-        "y": "kaufpreischf"
+        "title": "Farben",
+        "file": "data/colors.csv"
       },
       {
-        "title": "Ort",
-        "type": "group",
-        "groupKey": "stadt"
+        "title": "Ähnlichkeit (Grid)",
+        "type": "grid",
+        "file": "data/tsne.csv"
+      },
+      {
+        "title": "Ähnlichkeit (Blasen)",
+        "file": "data/tsne.csv"
+      },
+      {
+        "title": "Karte",
+        "type": "mapbox"
       }
     ],
     "textures": {
       "medium": {
         "size": 200,
-        "url": "https://vikusviewer.fh-potsdam.de/kunsthaus/data/sprites/spritesheet.json"
+        "url": "data/sprites/spritesheet.json"
       },
       "detail": {
         "size": 1024,
-        "url": "https://vikusviewer.fh-potsdam.de/kunsthaus/data/1024/"
-      },
-      "big": {
-        "size": 4096,
-        "url": "https://vikusviewer.fh-potsdam.de/kunsthaus/data/4096/"
+        "url": "data/1024/"
       }
     }
   },
   "style": {
-    "fontColor": "#0000ff",
-    "fontColorActive": "#f0f0f0",
-    "fontBackground": "#333333",
-    "textShadow": "1px 1px 0px #f8f4e9",
     "canvasBackground": "#ffffff",
-    "timelineBackground": "#fff9eb",
-    "timelineFontColor": "#000",
-    "backgroundHeader": "#333333",
-    "fontColorHeader": "#C6C6C6",
-    "detailBackground": "#0000ff",
-    "infoBackground": "#0000ff",
-    "infoFontColor": "#ffffff",
-    "searchbarBackground": "#DAA520"
-  },
-  "projection": {
-    "columns": 3
+    "timelineBackground": "#f8f4e9"
   },
   "detail": {
     "structure": [
       {
         "name": "Titel",
-        "source": "titel",
-        "display": "column",
-        "type": "text"
-      },
-      {
-        "name": "Entstehungszeit",
-        "source": "entstehungszeit",
-        "display": "column",
+        "source": "_Titel",
         "type": "text"
       },
       {
         "name": "Künstler:in",
-        "source": "column.knstlerin + ' (' + column.lebensdaten + ')'",
-        "display": "column",
-        "type": "function",
-        "fields": [
-          "knstlerin",
-          "lebensdaten"
-        ]
-      },
-      {
-        "name": "Weitere Titel",
-        "source": "weiteretitel",
-        "display": "column",
+        "source": "_Künstler:in",
         "type": "text"
       },
       {
-        "name": "",
-        "source": "",
-        "display": "column",
-        "type": "space"
-      },
-      {
-        "name": "Medium",
-        "source": "medium",
-        "display": "column",
+        "name": "Datierung",
+        "source": "yearExact",
         "type": "text"
       },
       {
-        "name": "Dimensionen",
-        "source": "dimensionen",
-        "display": "column",
+        "name": "Technik",
+        "source": "_Techniken",
         "type": "text"
       },
       {
         "name": "Inventarnummer",
-        "source": "inventarnummer",
-        "display": "column",
+        "source": "_Inventarnummer",
         "type": "text"
-      },
-      {
-        "name": "Signatur",
-        "source": "signatur",
-        "display": "column",
-        "type": "text"
-      },
-      {
-        "name": "Werkverzeichnis",
-        "source": "werkverzeichnis",
-        "display": "column",
-        "type": "text"
-      },
-      {
-        "name": "Gloornummer",
-        "source": "gloornummer",
-        "display": "column",
-        "type": "text"
-      },
-      {
-        "name": "Epoche",
-        "source": "epoche",
-        "display": "column",
-        "type": "text"
-      },
-      {
-        "name": "Fälschung",
-        "source": "falsch",
-        "display": "column",
-        "type": "text"
-      },
-      {
-        "name": "",
-        "source": "",
-        "display": "column",
-        "type": "space"
-      },
-      {
-        "name": "Besitz",
-        "source": "besitz",
-        "display": "column",
-        "type": "text"
-      },
-      {
-        "name": "Vorbesitzer:in",
-        "source": "column.vorbesitzerin + ' (' + column.stadt + ')'",
-        "display": "column",
-        "type": "function",
-        "fields": [
-          "vorbesitzerin",
-          "stadt"
-        ]
-      },
-      {
-        "name": "Raubkunst",
-        "source": "raubkunst",
-        "display": "column",
-        "type": "text"
-      },
-      {
-        "name": "Emigration Verfolgungskontext",
-        "source": "emigrationverfolgung",
-        "display": "column",
-        "type": "text"
-      },
-      {
-        "name": "Kaufpreis",
-        "source": "column.kaufpreischf + ' CHF'",
-        "display": "column",
-        "type": "function",
-        "fields": [
-          "kaufpreischf"
-        ]
-      },
-      {
-        "name": "",
-        "source": "",
-        "display": "column",
-        "type": "space"
-      },
-      {
-        "name": "provenienz",
-        "source": "provenienz",
-        "display": "wide",
-        "type": "html"
-      },
-      {
-        "name": "ausstellungen",
-        "source": "ausstellungen",
-        "display": "wide",
-        "type": "html"
-      },
-      {
-        "name": "literatur",
-        "source": "literatur",
-        "display": "wide",
-        "type": "html"
       }
     ]
   }
