@@ -1,204 +1,119 @@
-.filterReset {
-    position: absolute;
-    bottom: 10px;
-    left: 20px;
-    z-index: 100;
-    padding: 5px 12px;
-    cursor: pointer;
-    margin: 2px;
-    background-color: #FFF;
-    border: 2px solid #0000ff;
-    border-radius: 500px;
-    color: #0000ff;
-    transition: opacity 0.3s ease-in-out;
-    opacity: 1;
-}
+/* ==========================================================================
+   Grundlegende Filter-Styles & Layout
+   ================================ah========================================== */
 
-.sidebar .text-black-bold {
-    font-weight: 600;
-}
-
-.text-darkgrey-bold {
-    color: #ffffff;
-}
-
-.vorbesitzerin>.item {
-    border: none !important;
-}
-
-.filter {
-    transition: opacity 0.3s ease-in-out;
-    opacity: 1;
-    position: absolute;
-    top: 0px;
-    left: 0px;
+/* Haupt-Container für alle Filtergruppen oben */
+#filter-container {
+    display: flex;          /* Aktiviert Flexbox-Layout */
+    flex-wrap: wrap;        /* Erlaubt den Filtergruppen, bei Platzmangel umzubrechen */
+    justify-content: center; /* Zentriert die Filtergruppen horizontal */
+    align-items: flex-start;  /* Richtet Gruppen am oberen Rand aus */
+    gap: 20px 40px;         /* Vertikaler und horizontaler Abstand zwischen den Gruppen */
+    padding: 20px;          /* Innenabstand für den gesamten Filterbereich */
     width: 100%;
-    z-index: 100;
-    display: flex;
-    justify-content: center;
+    box-sizing: border-box; /* Stellt sicher, dass Padding die 100% Breite nicht sprengt */
+    background-color: #f8f9fa; /* Leichter Hintergrund für den Filterbereich */
 }
 
-
-.filter.hide,
-.filterReset.hide {
-    opacity: 0;
-    pointer-events: none;
-}
-
-.vorbesitzerinOuter.hide {
-    opacity: 0;
-    pointer-events: none;
-}
-
-.vorbesitzerinOuter.hide .item {
-    pointer-events: none;
-}
-
-
-
-
+/* Einzelne Filtergruppe (z.B. "Gattung", "Material") */
 .topfilter {
-    top: 0px;
-    position: absolute;
-    color: #0000ff;
-    /* color: #C6C6C6; */
-    z-index: 100;
-    padding: 10px;
-    /* background-color: #EFF2F3; */
-    /* background-color: #4A4A4A; */
-    user-select: none;
     display: flex;
-    flex-direction: column;
-    gap: 5px;
+    flex-direction: column; /* Titel über den Buttons */
+    gap: 8px;               /* Abstand zwischen Titel und den Buttons */
+    color: #0000ff;
+    user-select: none;
 }
 
 .topfilter .title {
+    font-weight: 600;       /* Fettgedruckter Titel */
     margin-left: 5px;
+    text-transform: capitalize; /* Macht den ersten Buchstaben groß */
 }
-
 
 .topfilter .items {
     display: flex;
+    flex-wrap: wrap;        /* Erlaubt das Umbrechen der Buttons in einer Gruppe */
+    gap: 8px;               /* Abstand zwischen den einzelnen Buttons */
 }
 
-.topfilter .items .item {
-    padding: 5px 12px;
+/* Styling für die einzelnen Filter-Buttons */
+.topfilter .item {
+    padding: 6px 14px;
     cursor: pointer;
-    margin: 2px;
-    background-color: #FFF;
+    background-color: #ffffff;
+    border: 2px solid #0000ff;
+    border-radius: 500px; /* Vollständig abgerundete Ecken */
+    color: #0000ff;
+    transition: all 0.2s ease-in-out; /* Weiche Übergänge für Hover & Klick */
+}
+
+.topfilter .item:hover {
+    background-color: #e6e6ff; /* Leichter blauer Hintergrund bei Hover */
+}
+
+.topfilter .item.active {
+    background-color: #0000ff; /* Aktiver Filter ist blau gefüllt */
+    color: #ffffff;            /* Weißer Text für aktiven Filter */
+}
+
+/* ==========================================================================
+   Spezielle Filter und Elemente (Reset-Button, Seitenleiste etc.)
+   ========================================================================== */
+
+/* "Alle zurücksetzen"-Button */
+.filterReset {
+    position: fixed;        /* Bleibt beim Scrollen sichtbar */
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+    padding: 8px 16px;
+    cursor: pointer;
+    background-color: #ffffff;
     border: 2px solid #0000ff;
     border-radius: 500px;
-}
-
-.topfilter .items .item.active {
-    background-color: #0000ff;
-    color: #FFF;
-    /* background-color: #DAA520; */
-    /* color: #333333; */
-}
-
-.topfilter .items .spacer {
-    margin-left: 2em;
-}
-
-.topfilter .items .raubkunst {
-    position: absolute;
-    top: 8.5em;
-}
-
-.topfilter .items.raubkunst .item {
-    padding: 5px 6px;
-}
-
-.topfilter div.hide {
-    opacity: 0.4;
-    pointer-events: none;
-}
-
-.topfilter .merge {
-    display: flex;
-}
-
-
-.stiftungfamilieanderesOuter {
-    left: 5px;
-}
-
-.verkauflandOuter {
-    top: 70px;
-    left: 35vw;
-}
-
-.raubkunstOuter {
-    left: 35vw;
-}
-
-/* .raubkunstOuter .items {
-     width: 50rem;
-     flex-wrap: wrap;
-} */
-
-.alteanonymemoderneOuter {
-    top: 70px;
-    left: 5px;
-}
-
-.emiOuter {
-    top: 43px;
-    left: 1000px;
-    position: absolute;
-}
-
-.falschOuter {
-    top: 3px;
-    left: 1000px;
-    position: absolute;
-}
-
-
-
-.vorbesitzerinOuter {
-    /* top: 0px; */
-    right: 0px;
-    width: 300px;
-    padding-top: 10px;
-    padding-right: 10px;
-    text-align: right;
-    height: 100vh;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    user-select: none;
-    pointer-events: none;
-    transition: opacity 0.3s ease-in-out;
+    color: #0000ff;
+    font-weight: 600;
+    transition: opacity 0.3s, transform 0.3s;
     opacity: 1;
 }
 
-.vorbesitzerinOuter .items.vorbesitzerin {
-    max-width: 200px;
-    align-self: flex-end;
-    padding-bottom: 3rem;
+/* Klassen zum Ein- und Ausblenden */
+.hide {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translateY(10px);
 }
 
-
-.vorbesitzerinOuter .items {
+/* Styling für die Seitenleiste (falls noch benötigt) */
+.vorbesitzerinOuter {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    user-select: none;
+    transition: opacity 0.3s ease-in-out;
+    opacity: 1;
+    z-index: 900;
+    text-align: right;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    gap: 10px;
 }
 
-.vorbesitzerinOuter .items .item:nth-of-type(2) {
-    line-height: 1.3;
-}
-
-.vorbesitzerinOuter .item {
+.vorbesitzerinOuter .items .item {
     cursor: pointer;
-    display: inline-flex;
-    padding: 3px;
-    line-height: 1;
-    pointer-events: all;
+    display: inline-block;
+    padding: 4px 8px;
+    border: 1px solid transparent; /* Unsichtbarer Rand für konsistentes Layout */
 }
 
 .vorbesitzerinOuter .item.active {
-    background-color: #939393;
-    color: #fff;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    color: #000;
 }
