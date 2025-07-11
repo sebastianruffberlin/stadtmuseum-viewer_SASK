@@ -1,190 +1,122 @@
+// christopher pietsch
+// cpietsch@gmail.com
+// V2 updated for stadtmuseum-viewer to handle flat_tags and nested_keywords
+
 function Tags() {
+  var state = {
+    active: [],
+    scope: [],
+  };
 
-  var fontsize = d3.scale.linear().range([8, 17])
+  var dispatch = d3.dispatch("change");
+  var data, config;
+  var tagsContainer;
 
-  var filter = { vorbesitzerin: [], epoche: [], besitz: [], verkaufland: [], raubkunst: [], emi: [], falsch: [] };
-  var lock = false;
-  var data;
-  var sortArrays = {
-    verkaufland: ["CH", "FR", "USA", "Raubkunst"],
-    besitz: ["Stiftung", "Privatbesitz", "Veräusserung", "Restitution", "anderes"],
-    epoche: ["Moderne", "Alte Meister", "Mittelalter"]
-  }
-  var removeKeys = ["Veräusserung", "Restitution", "anderes"];
-
-  function addOrRemove(array, value) {
-    array = array.slice();
-    var index = array.indexOf(value);
-    if (index > -1) {
-      array.splice(index, 1);
-    } else {
-      array.push(value);
-    }
-    return array;
-  }
-
-  function tags() { }
-
-  tags.updateDom = function updateDom(key, filteredData) {
-
-    if (key === "vorbesitzerin") {
-      console.log("updateDom", key, filteredData)
-      fontsize.domain(d3.extent(filteredData, function (d) { return d.size; }))
-    }
-
-    if (key === "besitz") {
-      filteredData = filteredData.filter(function (d) { return removeKeys.indexOf(d.key) == -1; })
-    }
-
-    if (sortArrays[key]) {
-      var sorted = sortArrays[key]
-      filteredData.sort(function (a, b) {
-        return sorted.indexOf(a.key) - sorted.indexOf(b.key)
-      })
-    }
-
-    var container = d3.select("." + key);
-    var selection = container
-      .selectAll(".item")
-      .data(filteredData, function (d) { return d.key; });
-
-    selection
-      .enter()
-      .append("div")
-      .classed("item", true)
-      .classed("spacer", function (d) {
-        return d.key === "Fälschung";
-      })
-      // .classed("raubkunst", function (d) {
-      //   return d.key === "Raubkunst";
-      // })
-      .text(function (d) {
-        return d.key;
-      })
-      .on("click", function (d) {
-        lock = true;
-        filter[key] = addOrRemove(filter[key], d.key);
-        tags.filter();
-        tags.update();
-        lock = false;
-      })
-      .filter(function (d) {
-        return key === "vorbesitzerin"
-      })
-      .style("font-size", function (d) {
-        return fontsize(d.size) + "px";
-      })
-
-    selection.exit()
-      // .remove()
-      .classed("active", false)
-      .classed("hide", true)
-      .filter(function (d) {
-        return key === "vorbesitzerin"
-      })
-      .remove()
-      .style("font-size", function (d) {
-        return "11px";
-      })
-
-
-    selection
-      .classed("active", function (d) {
-        return filter[key].indexOf(d.key) > -1;
-      })
-      .classed("hide", false)
-      .filter(function (d) {
-        return key === "vorbesitzerin"
-      })
-      .style("font-size", function (d) {
-        return fontsize(d.size) + "px";
-      })
-      .sort(function (a, b) {
-        return b.size - a.size;
-      })
-  }
-
-  tags.resize = function resize() {
-
-  }
-
-  tags.updateFilters = function updateFilters() {
-
-    var filters = Object.entries(filter) //.filter(function (d) { return d[1].length; })
-
-    // console.log("updateFilters", filters)
-
-    for (var a = 0; a < filters.length; a++) {
-      var filterCur = filters[a];
-      var index = {}
-      var otherFilter = filters.filter(function (d) { return d != filterCur; })
-      // console.log(filter, "otherFilter", otherFilter)
-      for (var i = 0; i < data.length; i++) {
-        var d = data[i];
-        var hit = otherFilter.filter(function (otherFilter) {
-          return otherFilter[1].length === 0 || otherFilter[1].indexOf(d[otherFilter[0]]) > -1;
-        })
-
-        if (hit.length == otherFilter.length) {
-          index[d[filterCur[0]]] = ++index[d[filterCur[0]]] || 1;
-        }
-      }
-      var filteredData = Object.keys(index)
-        .map(function (d) { return { key: d, size: index[d] }; })
-        .sort(function (a, b) { return b.size - a.size; })
-        .filter(function (d) { return d.key != "" && d.key != "undefined"; });
-
-      // console.log("done", filterCur[0], filteredData)
-
-      tags.updateDom(filterCur[0], filteredData)
-
-    }
-  }
-
-
-  tags.init = function (_data, config) {
-    // console.log("init tags", _data, config)
-    data = _data;
-
-    tags.updateFilters()
-  }
-
-
-  tags.update = function () {
-
-    tags.updateFilters();
-  }
-
-  tags.reset = function () {
-    filter = { vorbesitzerin: [], epoche: [], besitz: [], verkaufland: [], raubkunst: [], emi: [], falsch: [] };
-    tags.filter();
+  function tags(selection) {
+    tagsContainer = selection;
     tags.update();
   }
 
-  tags.filter = function (highlight) {
-    console.log("update filter", filter, highlight)
+  tags.init = function (_data, _config) {
+    data = _data;
+    config = _config;
+    tags.update();
+  };
 
-    d3.select(".infobar").classed("sneak", true);
+  tags.update = function () {
+    //
+    // NEUE LOGIK: Verarbeitet `flat_tags` und `nested_keywords`
+    //
+    var allTags = new Map();
 
-    var filters = Object.entries(highlight || filter).filter(function (d) { return d[1].length; })
-    // console.log(filters)
     data.forEach(function (d) {
-      var active = filters.filter(function (f) {
-        return f[1].indexOf(d[f[0]]) > -1;
-      }).length == filters.length;
-
-      if (highlight) {
-        d.highlight = active;
-      } else {
-        d.active = d.highlight = active;
+      // 1. Verarbeite `flat_tags`
+      if (d.flat_tags) {
+        const flatTags = d.flat_tags.split(',').map(t => t.trim());
+        flatTags.forEach(tag => {
+          if (!tag) return;
+          if (!allTags.has(tag)) {
+            allTags.set(tag, { isNested: false, items: new Set() });
+          }
+        });
       }
-    })
-    canvas.highlight();
-    if (!highlight) canvas.project();
-  }
 
-  tags.search = function () { }
+      // 2. Verarbeite `nested_keywords`
+      if (d.nested_keywords) {
+        const nestedKeywords = d.nested_keywords.split(';').map(t => t.trim());
+        nestedKeywords.forEach(pair => {
+          if (!pair) return;
+          const parts = pair.split('>');
+          if (parts.length !== 2) return;
+          const category = parts[0].trim();
+          const value = parts[1].trim();
+          
+          if (!allTags.has(category)) {
+            allTags.set(category, { isNested: true, items: new Set() });
+          }
+          allTags.get(category).items.add(value);
+        });
+      }
+    });
+    
+    //
+    // UI ERSTELLEN
+    //
+    tagsContainer = d3.select('.filter').html(""); // Leert den alten Filter-Container
 
+    allTags.forEach((tagData, tagName) => {
+        
+      const outer = tagsContainer.append('div').attr('class', 'topfilter');
+      outer.append('div').attr('class', 'title').text(tagName);
+      const itemsContainer = outer.append('div').attr('class', 'items');
 
+      if (tagData.isNested) {
+          // Erstelle Unter-Buttons für verschachtelte Keywords
+          const sortedItems = Array.from(tagData.items).sort();
+          sortedItems.forEach(item => {
+              const el = itemsContainer.append('div')
+                  .attr('class', 'item')
+                  .attr('data-tag', `${tagName}>${item}`)
+                  .text(item);
+
+              el.on('click', function () {
+                  tags.toggle(this, `${tagName}>${item}`);
+              });
+          });
+      } else {
+          // Erstelle einen einzelnen An/Aus-Button für flache Tags
+          const el = itemsContainer.append('div')
+              .attr('class', 'item')
+              .attr('data-tag', tagName)
+              .text(tagName); // oder ein anderer Text
+
+          el.on('click', function () {
+              tags.toggle(this, tagName);
+          });
+      }
+    });
+  };
+
+  tags.toggle = function (element, tag) {
+    var e = d3.select(element);
+    var alreadyActive = e.classed("active");
+    e.classed("active", !alreadyActive);
+
+    var tagIndex = state.active.indexOf(tag);
+    if (tagIndex != -1) {
+      state.active.splice(tagIndex, 1);
+    } else {
+      state.active.push(tag);
+    }
+    dispatch.change(state);
+  };
+
+  tags.reset = function () {
+    state.active = [];
+    d3.selectAll(".item").classed("active", false);
+    dispatch.change(state);
+  };
+  
+  d3.rebind(tags, dispatch, "on");
   return tags;
 }
