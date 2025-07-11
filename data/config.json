@@ -46,6 +46,9 @@
     "canvasBackground": "#ffffff",
     "timelineBackground": "#f8f4e9"
   },
+  "projection": {
+    "columns": 3
+  },
   "detail": {
     "structure": [
       {
