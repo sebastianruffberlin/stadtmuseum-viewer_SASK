@@ -1,68 +1,80 @@
 /* ==========================================================================
-   Grundlegende Filter-Styles & Layout
-   ================================ah========================================== */
+   1. LAYOUT DES FILTER-BEREICHS
+   ========================================================================== */
 
-/* Haupt-Container für alle Filtergruppen oben */
+/* Der Haupt-Container, der alle Filtergruppen nebeneinander anordnet */
 #filter-container {
-    display: flex;          /* Aktiviert Flexbox-Layout */
-    flex-wrap: wrap;        /* Erlaubt den Filtergruppen, bei Platzmangel umzubrechen */
-    justify-content: center; /* Zentriert die Filtergruppen horizontal */
-    align-items: flex-start;  /* Richtet Gruppen am oberen Rand aus */
-    gap: 20px 40px;         /* Vertikaler und horizontaler Abstand zwischen den Gruppen */
-    padding: 20px;          /* Innenabstand für den gesamten Filterbereich */
+    display: flex;            /* Ordnet die Filtergruppen nebeneinander an */
+    flex-wrap: wrap;          /* Lässt die Gruppen umbrechen, wenn der Platz knapp wird */
+    justify-content: center;  /* Zentriert die Gruppen horizontal */
+    gap: 30px 40px;           /* (Vertikaler Horizontaler) Abstand zwischen den Gruppen */
+    padding: 20px;            /* Innenabstand des gesamten Filterbereichs */
     width: 100%;
-    box-sizing: border-box; /* Stellt sicher, dass Padding die 100% Breite nicht sprengt */
-    background-color: #f8f9fa; /* Leichter Hintergrund für den Filterbereich */
-}
-
-/* Einzelne Filtergruppe (z.B. "Gattung", "Material") */
-.topfilter {
-    display: flex;
-    flex-direction: column; /* Titel über den Buttons */
-    gap: 8px;               /* Abstand zwischen Titel und den Buttons */
-    color: #0000ff;
-    user-select: none;
-}
-
-.topfilter .title {
-    font-weight: 600;       /* Fettgedruckter Titel */
-    margin-left: 5px;
-    text-transform: capitalize; /* Macht den ersten Buchstaben groß */
-}
-
-.topfilter .items {
-    display: flex;
-    flex-wrap: wrap;        /* Erlaubt das Umbrechen der Buttons in einer Gruppe */
-    gap: 8px;               /* Abstand zwischen den einzelnen Buttons */
-}
-
-/* Styling für die einzelnen Filter-Buttons */
-.topfilter .item {
-    padding: 6px 14px;
-    cursor: pointer;
-    background-color: #ffffff;
-    border: 2px solid #0000ff;
-    border-radius: 500px; /* Vollständig abgerundete Ecken */
-    color: #0000ff;
-    transition: all 0.2s ease-in-out; /* Weiche Übergänge für Hover & Klick */
-}
-
-.topfilter .item:hover {
-    background-color: #e6e6ff; /* Leichter blauer Hintergrund bei Hover */
-}
-
-.topfilter .item.active {
-    background-color: #0000ff; /* Aktiver Filter ist blau gefüllt */
-    color: #ffffff;            /* Weißer Text für aktiven Filter */
+    box-sizing: border-box;   /* Verhindert, dass Padding die Breite beeinflusst */
 }
 
 /* ==========================================================================
-   Spezielle Filter und Elemente (Reset-Button, Seitenleiste etc.)
+   2. STYLING EINER EINZELNEN FILTERGRUPPE (z.B. "Stil")
+   ========================================================================== */
+
+/* Eine einzelne Gruppe, bestehend aus Titel und Buttons */
+.topfilter {
+    display: flex;
+    flex-direction: column; /* Ordnet Titel und Buttons untereinander an */
+    gap: 8px;               /* Abstand zwischen Titel und den Buttons darunter */
+    user-select: none;
+}
+
+/* Der Titel einer Gruppe (z.B. "Stil", "Hauptfarbe") */
+.topfilter .title {
+    font-weight: 600;       /* Fettgedruckter Titel */
+    color: #333;            /* Dunkle Textfarbe für bessere Lesbarkeit */
+    text-transform: capitalize; /* Macht den ersten Buchstaben groß */
+    margin-left: 5px;
+}
+
+/* Der Container für die Buttons innerhalb einer Gruppe */
+.topfilter .items {
+    display: flex;
+    flex-wrap: wrap;        /* Lässt Buttons innerhalb einer Gruppe umbrechen */
+    gap: 8px;               /* Abstand zwischen den einzelnen Buttons */
+}
+
+/* ==========================================================================
+   3. STYLING DER FILTER-BUTTONS (z.B. "Realism", "Grays")
+   ========================================================================== */
+
+.topfilter .item {
+    padding: 6px 14px;
+    cursor: pointer;
+    border-radius: 500px; /* Vollständig abgerundete Ecken für "Pillen"-Form */
+    transition: all 0.2s ease-in-out; /* Weicher Übergang für Hover & Klick */
+    font-size: 14px;
+
+    /* Standard-Zustand (nicht ausgewählt) */
+    background-color: #ffffff;
+    border: 2px solid #0000ff;
+    color: #0000ff;
+}
+
+.topfilter .item:hover {
+    background-color: #e6e6ff; /* Leichter blauer Hintergrund bei Mauszeigerkontakt */
+    transform: translateY(-1px); /* Leichter Schwebe-Effekt */
+}
+
+/* Aktiver Zustand (ausgewählt) */
+.topfilter .item.active {
+    background-color: #0000ff;
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   4. SONSTIGE STYLES
    ========================================================================== */
 
 /* "Alle zurücksetzen"-Button */
 .filterReset {
-    position: fixed;        /* Bleibt beim Scrollen sichtbar */
+    position: fixed;
     bottom: 20px;
     left: 20px;
     z-index: 1000;
@@ -74,46 +86,10 @@
     color: #0000ff;
     font-weight: 600;
     transition: opacity 0.3s, transform 0.3s;
-    opacity: 1;
 }
 
-/* Klassen zum Ein- und Ausblenden */
+/* Klasse zum Ausblenden */
 .hide {
-    opacity: 0 !important;
-    pointer-events: none !important;
-    transform: translateY(10px);
-}
-
-/* Styling für die Seitenleiste (falls noch benötigt) */
-.vorbesitzerinOuter {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 300px;
-    height: 100vh;
-    padding: 20px;
-    box-sizing: border-box;
-    overflow-y: auto;
-    user-select: none;
-    transition: opacity 0.3s ease-in-out;
-    opacity: 1;
-    z-index: 900;
-    text-align: right;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 10px;
-}
-
-.vorbesitzerinOuter .items .item {
-    cursor: pointer;
-    display: inline-block;
-    padding: 4px 8px;
-    border: 1px solid transparent; /* Unsichtbarer Rand für konsistentes Layout */
-}
-
-.vorbesitzerinOuter .item.active {
-    background-color: #e9ecef;
-    border-radius: 4px;
-    color: #000;
+    opacity: 0;
+    pointer-events: none;
 }
