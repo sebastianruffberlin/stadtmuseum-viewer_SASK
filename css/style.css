@@ -918,8 +918,8 @@ textarea:focus,
 input:focus {
   outline: none;
 }
-.navi {
-  position: absolute !important; /* !important erzwingt die Regel */
+body > .navi { /* Wichtige Änderung hier für mehr Spezifität! */
+  position: absolute;
   top: 50%;
   left: 20px;
   transform: translateY(-50%);
