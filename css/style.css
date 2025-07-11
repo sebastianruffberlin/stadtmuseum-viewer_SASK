@@ -918,7 +918,7 @@ textarea:focus,
 input:focus {
   outline: none;
 }
-body > .navi { /* Wichtige Änderung hier für mehr Spezifität! */
+body > .navi {
   position: absolute;
   top: 50%;
   left: 20px;
@@ -927,27 +927,28 @@ body > .navi { /* Wichtige Änderung hier für mehr Spezifität! */
   display: flex;
   flex-direction: column;
   gap: 10px;
+  /* Die folgenden Zeilen setzen die störenden Regeln aus infobar.css zurück */
+  bottom: auto;
+  width: auto;
+  left: 20px; /* Explizit nochmal setzen */
 }
 
 .navi .button {
   background-color: #fff;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 2px;
+  border-radius: 4px;
+  padding: 6px 10px;
   cursor: pointer;
   font-family: sans-serif;
-  font-size: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  font-size: 11px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   text-align: center;
   transition: all 0.2s ease;
+  flex-grow: 0; /* Verhindert, dass die Buttons die Breite füllen */
 }
 
 .navi .button.active {
   background-color: #333;
   color: #fff;
   border-color: #333;
-}
-
-.navi .button:hover:not(.active) {
-  background-color: #f0f0f0;
 }
