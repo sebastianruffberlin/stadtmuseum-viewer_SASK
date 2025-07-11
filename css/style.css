@@ -933,10 +933,10 @@ body > .navi { /* Wichtige Änderung hier für mehr Spezifität! */
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 5px;
-  padding: 10px;
+  padding: 2px;
   cursor: pointer;
   font-family: sans-serif;
-  font-size: 14px;
+  font-size: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   text-align: center;
   transition: all 0.2s ease;
