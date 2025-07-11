@@ -919,7 +919,7 @@ input:focus {
   outline: none;
 }
 .navi {
-  position: absolute;
+  position: absolute !important; /* !important erzwingt die Regel */
   top: 50%;
   left: 20px;
   transform: translateY(-50%);
@@ -950,9 +950,4 @@ input:focus {
 
 .navi .button:hover:not(.active) {
   background-color: #f0f0f0;
-}
-
-
-*:focus {
-  outline: none;
 }
