@@ -1,6 +1,6 @@
 // christopher pietsch
 // cpietsch@gmail.com
-// V2.1 - Angepasst für die neue Flexbox-basierte CSS-Struktur
+// V2 updated for stadtmuseum-viewer to handle flat_tags and nested_keywords
 
 function Tags() {
   var state = {
@@ -10,10 +10,11 @@ function Tags() {
 
   var dispatch = d3.dispatch("change");
   var data, config;
-  var tagsContainer; // Diese Variable wird jetzt den richtigen Container referenzieren
+  var tagsContainer;
 
   function tags(selection) {
-    // Diese Funktion wird nicht mehr direkt genutzt, wir verwenden stattdessen tags.init
+    tagsContainer = selection;
+    tags.update();
   }
 
   tags.init = function (_data, _config) {
@@ -23,9 +24,11 @@ function Tags() {
   };
 
   tags.update = function () {
+    //
+    // NEUE LOGIK: Verarbeitet `flat_tags` und `nested_keywords`
+    //
     var allTags = new Map();
 
-    // Ihre Logik zum Parsen der CSV-Daten ist bereits perfekt und bleibt unverändert.
     data.forEach(function (d) {
       // 1. Verarbeite `flat_tags`
       if (d.flat_tags) {
@@ -59,13 +62,10 @@ function Tags() {
     //
     // UI ERSTELLEN
     //
-    // ===== HIER IST DIE EINZIGE ÄNDERUNG =====
-    // Wir wählen den korrekten Container '#filter-container' anstatt '.filter'.
-    tagsContainer = d3.select('#filter-container').html(""); 
+    tagsContainer = d3.select('.filter').html(""); // Leert den alten Filter-Container
 
-    // Die folgende Logik zum Erstellen der HTML-Elemente ist bereits perfekt
-    // und erzeugt genau die Struktur, die unsere neue CSS-Datei erwartet.
     allTags.forEach((tagData, tagName) => {
+        
       const outer = tagsContainer.append('div').attr('class', 'topfilter');
       outer.append('div').attr('class', 'title').text(tagName);
       const itemsContainer = outer.append('div').attr('class', 'items');
@@ -84,12 +84,11 @@ function Tags() {
               });
           });
       } else {
-          // Für flache Tags wird die Gruppe einfach nur einen Button haben.
-          // Die CSS (Flexbox) sorgt dafür, dass es korrekt angezeigt wird.
+          // Erstelle einen einzelnen An/Aus-Button für flache Tags
           const el = itemsContainer.append('div')
               .attr('class', 'item')
               .attr('data-tag', tagName)
-              .text(tagName);
+              .text(tagName); // oder ein anderer Text
 
           el.on('click', function () {
               tags.toggle(this, tagName);
@@ -98,7 +97,6 @@ function Tags() {
     });
   };
 
-  // Diese Funktion zum Umschalten der Filter ist perfekt und bleibt unverändert.
   tags.toggle = function (element, tag) {
     var e = d3.select(element);
     var alreadyActive = e.classed("active");
@@ -113,7 +111,6 @@ function Tags() {
     dispatch.change(state);
   };
 
-  // Diese Funktion zum Zurücksetzen ist ebenfalls perfekt.
   tags.reset = function () {
     state.active = [];
     d3.selectAll(".item").classed("active", false);
